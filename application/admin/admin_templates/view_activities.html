@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% set title = "Activities" %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6">
+                <h1>Activities for {{ username }}</h1>
+                <div class="my-4" style="overflow-y: scroll; height: 400px">
+                    {% for line in log_content %}
+                        <p>{{ line }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

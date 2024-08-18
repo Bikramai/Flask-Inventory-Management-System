@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% set title = "Categories" %}
+
+{% block content %}
+    <div class="container">
+        {% include "flash-messages.html" %}
+        <div class="border p-3 rounded">
+            <h3 id="form-heading">Add New Category</h3>
+            <form action="{{ url_for("admin.create_category") }}" method="post">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Category Name</label>
+                        <input class="form-control" name="name" required>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Category Description</label>
+                        <input class="form-control" name="name" required>
+                    </div>
+                    <div class="col-12 col-md-2 d-flex align-items-end">
+                        <button id="form-btn" type="submit" class="btn btn-primary w-100">Add</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-3">
+            <h3>All Categories</h3>
+            {% for category in categories %}
+                <div class="d-flex justify-content-between border my-2 p-3 rounded replaceable">
+                    <div>
+                        <h5 class="text-secondary">{{ category.name.capitalize() }}</h5>
+                        <p>{{ category.description }}</p>
+                    </div>
+                    <div>
+                        <a href="#" class="btn btn-success edit-btn" data-id="{{ category.id }}"
+                           data-name="{{ category.name }}" data-desc="{{ category.description }}">Edit</a>
+
+                        <a href="{{ url_for("admin.delete_category", id=category.id) }}"
+                           class="btn btn-danger">Delete</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var editButtons = document.querySelectorAll('.edit-btn');
+            editButtons.forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var id = this.dataset.id;
+                    var name = this.dataset.name;
+                    var description = this.dataset.desc;
+
+                    var container = this.closest('.replaceable');
+
+                    container.innerHTML = `
+                        <form method="post" action="/admin/update_category/${id}" class="d-flex justify-content-between w-100 align-items-center gap-3">
+                            <div class="flex-grow-1">
+                                <input class="form-control w-100 my-2" type="text" name="name" value="${name}" required>
+                                <textarea class="form-control w-100 my-2" name="description" required>${description}</textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-info">Update</button>
+                            </div>
+                        </form>
+                    `
+
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

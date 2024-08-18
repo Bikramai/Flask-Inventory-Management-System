@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% set title = "All Products" %}
+
+{% block content %}
+    {% include "flash-messages.html" %}
+    <h3 class="my-4">{{ page_heading }}</h3>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Link</th>
+                <th>Rating</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ product.name[:60] }}...</td>
+                    <td>{{ product.category.name }}</td>
+                    <td>$ {{ product.price }}</td>
+                    <td>
+                        <a href="{{ product.purchase_link }}" class="link-primary" target="_blank">Visit Product</a></td>
+                    <td>{{ product.average_rating() }}</td>
+                    <td>
+                        <a href="{{ url_for("admin.view_product", product_id=product.id) }}" class="btn btn-sm btn-success col-5">View</a>
+                        <a href="{{ url_for("admin.delete_product", product_id=product.id) }}" class="btn btn-sm btn-danger col-5">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

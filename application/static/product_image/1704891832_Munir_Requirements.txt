@@ -1,0 +1,13 @@
+Admin Dashboard Functionalities:
+6.	Content Management:
+•	Manage static content on the website, such as About Us and Contact Us information.
+•	Edit or update blog posts or articles if applicable.
+•	Create new blog (Here the form will appear)
+7.	Notification Management:
+•	Receive notifications for new user registrations, reviews, or other important events.
+•	Manage notification preferences.
+
+User Functionalities:
+10.	Notification Preferences:
+•	Allow users to customize notification preferences.
+•	Notify users of new reviews, comments, or relevant updates.

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set title = "View Product" %}
+
+{% block content %}
+    <h4 class="my-4">{{ product.name }}</h4>
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <img class="img-thumbnail" width="100%"
+                 src="{{ url_for("static", filename="product_image/"+product.image_path) }}">
+        </div>
+        <div class=" col-12 col-md-6 d-flex flex-column justify-content-between">
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Rating</span>
+                {{ product.average_rating() }}
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Price</span>
+                <span>${{ product.price }}</span>
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Category</span>
+                <span>{{ product.category.name }}</span>
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Rating</span>
+                <span>{{ product.average_rating() }}</span>
+            </div>
+            <div>
+                <a href="{{ product.purchase_link }}" target="_blank"
+                   class="btn btn-primary flex-grow-1">Visit Product</a>
+                <a href="{{ product.purchase_link }}" target="_blank"
+                   class="btn btn-success flex-grow-1">Edit Product</a>
+                <a href="{{ url_for("admin.delete_product", product_id=product.id) }}" target="_blank"
+                   class="btn btn-danger flex-grow-1">Delete Product</a>
+            </div>
+        </div>
+    </div>
+    <p style="white-space: pre-line">
+        <b>Description:</b>
+        {{ product.description }}</p>
+{% endblock %}

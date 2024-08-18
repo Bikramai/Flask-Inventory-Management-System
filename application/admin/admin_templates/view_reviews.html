@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% set title = "Reviews" %}
+
+{% block content %}
+<h1>Reviews</h1>
+<table class="table table-striped ">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Rating</th>
+            <th>Pros</th>
+            <th>Cons</th>
+            <th>Feedback</th>
+            <th>Reviewed By</th>
+            <th colspan="2">
+                <form class="d-flex gap-1">
+                    <select name="status" class="form-select">
+                        {% for s in status %}
+                        <option value="{{s}}" {{ "selected" if s==default_status else "" }}>{{s}}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for review in reviews %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ review.rating }} Star</td>
+            <td>{{ review.pros }}</td>
+            <td>{{ review.cons }}</td>
+            <td>{{ review.content }}</td>
+            <td>{{ review.reviewed_by.username }}</td>
+            <td>
+                {% if not review.status %}
+                    <a href="{{ url_for('admin.approve_review', review_id=review.id) }}" class="btn btn-primary">Approve</a>
+                {% endif %}
+                <a href="{{ url_for('admin.delete_review', review_id=review.id) }}" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    {% include "head.html" %}
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-12 col-md-6 shadow rounded p-3 bg-white">
+            {% include "flash-messages.html" %}
+            <h3>Login</h3>
+            <form action="{{ url_for("auth.login") }}" method="post">
+                <div>
+                    <label class="form-label">Username</label>
+                    <input class="form-control" type="text" name="username" required>
+                </div>
+                <div>
+                    <label class="form-label">Password</label>
+                    <input class="form-control" type="password" name="password" required>
+                </div>
+                <div class="my-3">
+                    <label>
+                        Don't have an account! <a class="link-primary fw-bold" href="{{ url_for("auth.register") }}">Register</a>
+                    </label>
+                </div>
+                <div class="my-3">
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

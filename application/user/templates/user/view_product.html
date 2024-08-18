@@ -1,0 +1,155 @@
+{% extends "user/base.html" %}
+{% set title = "View Product" %}
+
+{% block content %}
+    {% include "flash-messages.html" %}
+    <h4 class="my-4">{{ product.name }}</h4>
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <img class="img-thumbnail" width="100%"
+                 src="{{ url_for("static", filename="product_image/"+product.image_path) }}">
+        </div>
+        <div class=" col-12 col-md-6 d-flex flex-column justify-content-between">
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Rating</span>
+                {{ product.average_rating() }}
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Price</span>
+                <span>${{ product.price }}</span>
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Category</span>
+                <span>{{ product.category.name }}</span>
+            </div>
+            <div class="border px-4 py-2">
+                <span class="d-block fw-bold">Rating</span>
+                <span>{{ product.average_rating() }}</span>
+            </div>
+            <div class="d-flex align-items-baseline gap-3">
+                <a href="{{ product.purchase_link }}" target="_blank"
+                   class="btn btn-primary mt-3 d-block flex-grow-1 flex-md-grow-0">Visit Product</a>
+                <a {% if product in current_user.favorite_products %}
+                    href="{{ url_for('user.remove_from_favorites', product_id=product.id) }}" {% else %}
+                    href="{{ url_for('user.add_to_favorites', product_id=product.id) }}" {% endif %}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                         fill="{{ 'red' if product in current_user.favorite_products else 'lightgray' }}"
+                         class="bi bi-heart-fill"
+                         viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <p style="white-space: pre-line">
+        <b>Description:</b>
+        {{ product.description }}</p>
+
+    {% if not review_exists %}
+        <div>
+            <h4>Add Your Review!</h4>
+            <form action="{{ url_for("user.add_review", product_id=product.id) }}" method="post">
+                <div>
+                    <label class="form-label fw-bold">Rating</label>
+                    <div class="d-flex gap-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" value="1" required>
+                            <label class="form-label">1 Star</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" value="2" required>
+                            <label class="form-label">2 Stars</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" value="3" required>
+                            <label class="form-label">3 Stars</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" value="4" required>
+                            <label class="form-label">4 Stars</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="rating" value="5" required>
+                            <label class="form-label">5 Stars</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Pros</label>
+                        <textarea class="form-control" rows="5" name="pros"></textarea>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-bold">Cons</label>
+                        <textarea class="form-control" rows="5" name="cons"></textarea>
+                    </div>
+                </div>
+                <div>
+                    <label class="form-label fw-bold">Detailed Feedback</label>
+                    <textarea name="feedback" class="form-control" rows="5"></textarea>
+                </div>
+                <div class="my-2 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-5">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    {% elif not review_exists.status %}
+        <p style="white-space: pre-line" class="alert alert-warning">Your review is pending for approval!
+            <b>Rating: </b>{{ review_exists.rating }}
+            <b>Pros: </b>{{ review_exists.pros | safe }}
+            <b>Cons: </b>{{ review_exists.cons | safe }}
+            <b>Detailed Feedback: </b>{{ review_exists.content | safe }}
+        </p>
+    {% endif %}
+
+    <div class="my-5">
+        <h3>Other Reviews</h3>
+        {% if other_reviews %}
+            {% for review in other_reviews %}
+                <div class="border rounded p-3">
+                    <h6 class="bg-warning p-2 rounded-2 d-inline-block ">
+                        <img width="20px" class="rounded-circle"
+                             src="{{ url_for("static", filename="images/"+review.reviewed_by.profile_picture) }}">
+                        {{ review.reviewed_by.username }}</h6>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <p style="white-space: pre-line"><b>Rating: </b>{{ review.rating }}
+                            <b>Pros: </b>{{ review.pros | safe }}
+                            <b>Cons: </b>{{ review.cons | safe }}
+                            <b>Detailed Feedback: </b>{{ review.content | safe }}</p>
+                        {% if review in current_user.bookmarked_reviews %}
+                            <a href="{{ url_for('user.remove_from_bookmarks', review_id=review.id) }}"
+                               class="btn btn-danger">Unbookmark</a>
+                        {% else %}
+                            <a href="{{ url_for('user.add_to_bookmarks', review_id=review.id) }}"
+                               class="btn btn-primary">Bookmark</a>
+                        {% endif %}
+                    </div>
+                    <h6>Comments</h6>
+                    {% if review.comments %}
+                        {% for comment in review.comments %}
+                            <p>
+                            <div class="bg-info p-2 rounded d-inline-block">
+                                <img width="20px" class="rounded-circle"
+                                     src="{{ url_for("static", filename="images/"+comment.commented_by.profile_picture) }}">
+                                <strong>{{ comment.commented_by.username }}:</strong>
+                            </div>
+                            <span class="p-2 border rounded w-100" style="white-space: pre-line">{{ comment.content }}</span>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-secondary text-center ">Be first to add a comment!</p>
+                    {% endif %}
+                    <form action="{{ url_for('user.add_comment', review_id=review.id) }}" method="post">
+                        <textarea name="content" rows="2" class="form-control"></textarea>
+                        <input type="submit" class="btn btn-secondary my-1" value="Add Comment">
+                    </form>
+                </div>
+            {% endfor %}
+
+        {% else %}
+            <p class="text-center text-secondary">No Reviews</p>
+        {% endif %}
+    </div>
+{% endblock %}

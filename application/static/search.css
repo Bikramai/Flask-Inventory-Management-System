@@ -1,0 +1,17 @@
+input[type=search]{
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.search-input{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.search-input:hover{
+    background: #e7e7e7 !important;
+}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% set title = "All Users" %}
+
+{% block content %}
+    {% include "flash-messages.html" %}
+    <h3 class="my-4">All Users</h3>
+    <table class="table table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Picture</th>
+            <th>Username</th>
+            <th>User Type</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td class="col-1 img-fluid"><img width="50px" class="rounded-circle"
+                                                 src="{{ url_for("static", filename="images/"+user.profile_picture) }}"
+                                                 alt="Profile Picture"></td>
+                <td class="col-5">
+                    <label class="fs-5">{{ user.username }}</label><span
+                        class="text-primary">{{ "- [SUSPENDED]" if user.is_suspended else "" }}</span>
+                </td>
+                <td class="col-4">
+                    {% if user.is_admin %}
+                        Admin
+                    {% else %}
+                        User
+                    {% endif %}
+                </td>
+                {% if not user.is_admin %}
+                    <td>
+                        <a class="link-success" href="{{ url_for('admin.edit_user', user_id=user.id) }}">Edit</a>
+                    </td>
+                    <td>
+                        <a class="link-danger" href="{{ url_for('admin.delete_user', user_id=user.id) }}">Delete</a>
+                    </td>
+                    <td>
+                        {% if not user.is_suspended %}
+                            <a class="link-secondary" href="{{ url_for('admin.suspend_user', user_id=user.id) }}">Suspend</a>
+                        {% else %}
+                            <a class="link-secondary" href="{{ url_for('admin.unsuspend_user', user_id=user.id) }}">Unsuspend</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="link-primary" href="{{ url_for('admin.view_activities', user_id=user.id) }}">Activities</a>
+                    </td>
+                {% else %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

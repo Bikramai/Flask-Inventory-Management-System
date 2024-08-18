@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include "head.html" %}
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for("static", filename="search.css") }}">
+</head>
+<body>
+<section class="bg-light">
+    <nav class="container d-flex justify-content-between align-items-center py-3">
+        <div>
+            <form method="get" action="{{ url_for("search.search_query") }}">
+                <div class="search-input bg-light">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                    <input name="q" type="search" placeholder="Search Product!">
+                </div>
+            </form>
+        </div>
+        <div class="text-center flex-grow-1">
+            <a class="h3 text-decoration-none text-dark" href="{{ url_for("route.index") }}">
+                Ikram Phurumbo
+            </a>
+        </div>
+        <div class="d-flex gap-3 align-items-center">
+            <a class="text-decoration-none text-dark" href="{{ url_for("route.about") }}">About</a>
+            <a class="text-decoration-none text-dark" href="{{ url_for("route.about") }}">Contact Us</a>
+            <a href="{{ url_for("auth.login") }}" class="btn btn-dark btn-sm px-5">Login</a>
+        </div>
+    </nav>
+</section>
+{% block content %}
+{% endblock %}
+</body>
+</html>

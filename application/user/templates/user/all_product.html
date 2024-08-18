@@ -1,0 +1,93 @@
+{% extends "user/base.html" %}
+
+{% set title = "All Products" %}
+
+{% block content %}
+    <h3>{{ page_heading }}</h3>
+    <div class="row">
+        {% if products %}
+            {% for product in products %}
+                <div class="col-12 col-md-4 col-lg-3 my-2">
+                    <div class="card w-100">
+                        <div class="border-bottom w-100">
+                            <img
+                             style="height: 220px;"
+                             class="d-block mx-auto p-3"
+                             src="{{ url_for("static", filename="product_image/"+product.image_path) }}"
+                             alt="Card image cap">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name[:25] }}</h5>
+                            <p style="white-space: pre-line" class="card-text">{{ product.description[:50] }}...</p>
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a href="{{ product.purchase_link }}" target="_blank">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="lightgray"
+                                             class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                  d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                                            <path fill-rule="evenodd"
+                                                  d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a class="btn btn-primary"
+                                       href="{{ url_for("user.view_product", product_id=product.id) }}">
+                                        View Product
+                                    </a>
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a
+                                            {% if product in current_user.favorite_products %}
+                                                href="{{ url_for("user.remove_from_favorites", product_id=product.id) }}"
+                                            {% else %}
+                                                href="{{ url_for("user.add_to_favorites", product_id=product.id) }}"
+                                            {% endif %}
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                             fill="{{ "red" if product in current_user.favorite_products else "lightgray" }}"
+                                             class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-secondary text-center">No Favourites</p>
+        {% endif %}
+    </div>
+
+    {% if page_heading == "Favorite Products" %}
+        <h3>Bookmarked Reviews</h3>
+        <div class="row">
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="col-12 col-md-6 col-lg-4 border rounded p-3">
+                        <h6 class="bg-warning p-2 rounded-2 d-inline-block ">
+                            <img width="20px" class="rounded-circle"
+                                 src="{{ url_for("static", filename="images/"+review.reviewed_by.profile_picture) }}">
+                            {{ review.reviewed_by.username }}</h6>
+                        <div class="d-flex flex-column">
+                            <p style="white-space: pre-line"><b>Rating: </b>{{ review.rating }}
+                                <b>Pros: </b>{{ review.pros | safe }}
+                                <b>Cons: </b>{{ review.cons | safe }}
+                                <b>Detailed Feedback: </b>{{ review.content | safe }}</p>
+                            <div>
+                                <a href="{{ url_for('user.remove_from_bookmarks', review_id=review.id) }}"
+                                   class="btn btn-danger">Unbookmark</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-secondary text-center">No Bookmarked Reviews</p>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock %}

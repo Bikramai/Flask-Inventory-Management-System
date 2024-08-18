@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% set title = "Query" %}
+
+{% block content %}
+    <h1>User Queries</h1>
+    {% for q in query %}
+        <div class="my-3 border rounded p-4">
+            <span class="d-block fw-bold">{{ q.fullname }}</span>
+            <span class="d-block">{{ q.email }}</span>
+            <p style="white-space: pre-line">{{ q.message }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
