@@ -1,6 +1,6 @@
 # Flask-Inventory-Management-System
 
-##About <br>
+## About <br>
 Inventory Management System Allow users to search the product, and them to favorites. Admin can add new products and add new blogs, pictures and any types of files.
 
 
